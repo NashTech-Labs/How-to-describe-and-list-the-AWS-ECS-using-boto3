@@ -2,18 +2,18 @@
 
 import boto3
 import json
-AWS_REGION = input("Enter the AWS_REGION Name")
+REGION = input("Enter the REGION Name")
 
-client = boto3.client("ecs", region_name=AWS_REGION)
+client_for_ECS = boto3.client("ecs", region_name=REGION)
 
-paginator = client.get_paginator('list_clusters')
+pag = client_for_ECS.get_paginator('list_clusters')
 
-response_iterator = paginator.paginate(
+res_iterator = pag.paginate(
     PaginationConfig={
-        'PageSize':100
+        'PageSize':80
 })
 
-for page in response_iterator:
-    for arn in page['clusterArns']:
-        response = client.describe_clusters(clusters=[arn])
-        print(json.dumps(response, indent=4))
+for x in res_iterator:
+    for arn in x['clusterArns']:
+        result = client_for_ECS.describe_clusters(clusters=[arn])
+        print(json.dumps(result, indent=4))
